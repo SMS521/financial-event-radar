@@ -6,10 +6,25 @@ independently trusted yet — see `AUDIT.md` before assuming any "PASS",
 
 ## Standing rule: announce, explain, wait — every time
 
-Before any agent-os agent (`developer-agent`, `qa-agent`, `release-agent`,
-etc.) writes to a file in this repo, runs a shell command, commits, pushes,
-or promotes anything here, a Claude session must, in the chat, in this
-order:
+**This rule binds the interactive orchestrating session — a human directly
+chatting with Claude — before it starts or approves an `agentos run`
+against this repo. It does not bind the individual agent sessions that run
+*inside* an already-approved run** (`product-agent`, `developer-agent`,
+`qa-agent`, `release-agent`, etc.). Those are single, non-interactive SDK
+sessions with no chat channel back to a human mid-task — if one tries to
+pause and "wait for an explicit yes" the way this section describes, it
+cannot receive an answer and will fail its task by doing nothing. That
+happened for real on 2026-08-21: `product-agent` read this file, applied
+the rule to itself, and spent all three of its attempts asking permission
+instead of doing its (read-only, harmless) job, until `qa`/`reviewer`
+correctly failed and escalated it. An agent-os agent session should do its
+task per its own skill instructions and whatever the Permission Engine /
+`policy.yaml` autonomy tier / approval queue already gates live — that
+machinery, not a chat pause, is how an in-flight agent's risky actions get
+controlled.
+
+Before a human-facing session starts or approves an `agentos run` here, in
+this order:
 
 1. **State the plan** — what's about to happen, concretely.
 2. **State why** — what it's for and what the expected result is.
