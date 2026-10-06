@@ -1,0 +1,10 @@
+{
+  "email": "sahilphoto5195@gmail.com",
+  "cloud_report_url": "",
+  "_cloud_report_url_note": "Optional: a URL where the nightly cloud run publishes dashboard.html. Leave empty to use the copy attached to your 7:30 email.",
+  "news_days": 7,
+  "deep_threshold_eur": 1000,
+  "x_nitter_instances": ["https://nitter.net", "https://nitter.poast.org", "https://xcancel.com"],
+  "risk_words": ["downgrade", "cut", "cuts", "lawsuit", "probe", "investigation", "warning", "warns", "recall", "miss", "misses", "plunge", "plunges", "slump", "tumble", "tumbles", "sanction", "tariff", "tariffs", "strike", "fraud", "layoff", "layoffs", "delay", "delayed", "halt", "default", "short seller", "sell-off", "selloff", "crash", "falls", "drop", "drops", "loss", "bearish", "export ban", "export controls"],
+  "good_words": ["upgrade", "upgrades", "beat", "beats", "record", "raises guidance", "raised guidance", "contract", "wins", "surge", "surges", "soar", "soars", "jumps", "rally", "rallies", "buyback", "order", "orders", "approval", "partnership", "bullish", "outperform", "all-time high"]
+}
