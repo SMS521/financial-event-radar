@@ -3,3 +3,4 @@ reports/dashboard_*.html
 reports/cloud_dashboard.html
 logs_*.txt
 config/reachable.json
+__pycache__/
