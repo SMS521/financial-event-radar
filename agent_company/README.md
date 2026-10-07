@@ -32,7 +32,7 @@ Real money is never touched: the code has **no real-money trading path**.
 
 | Step | File | What you should see | Needs |
 |---|---|---|---|
-| 1 | `1 SETUP + SELF-TEST.bat` | Downloads portable Python once, runs 20 offline tests → **SELF-TEST PASSED ✅** | internet once |
+| 1 | `1 SETUP + SELF-TEST.bat` | Downloads portable Python once, runs 21 offline tests → **SELF-TEST PASSED ✅** | internet once |
 | 2 | `2 DEMO - whole company offline.bat` | All 20 agents run on *simulated* data → dashboard opens (purple DEMO banner) | nothing |
 | 3 | `3 PROBE - which websites and keys work.bat` | ✅/❌ list: Yahoo, Stooq, ECB, Google News, Reddit, StockTwits, Polymarket, Nasdaq, eToro, Anthropic | — |
 | 4 | `4 COLLECT 5-YEAR DATA.bat` | ~100 symbols + 11 currency pairs, 6 years daily → `data\market.db` | internet |
