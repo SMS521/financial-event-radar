@@ -2,7 +2,7 @@
 import json
 import math
 import statistics as st
-from datetime import date
+from datetime import date, timedelta
 
 from company.agents.base import Agent
 from company.core.base import cfg, now_iso
@@ -145,7 +145,10 @@ class Backtester(Agent):
         sc = cfg("strategies.json")
         groups = set(sc["universe_groups"])
         syms = [s["symbol"] for s in ctx.universe["symbols"] if s["group"] in groups and s["kind"] in ("stock", "etf")]
-        dates, syms, C = E.build_matrix(ctx.db, syms, sc.get("benchmark"))
+        if "sp500" in groups and ctx.db.q("SELECT name FROM sqlite_master WHERE name='catalog'"):
+            syms += [r["symbol"] for r in ctx.db.q("SELECT symbol FROM catalog WHERE list='sp500'")]
+        start = (date.today() - timedelta(days=int(365.25 * sc.get("backtest_years", 12)))).isoformat()
+        dates, syms, C = E.build_matrix(ctx.db, sorted(set(syms)), sc.get("benchmark"), start)
         if len(dates) < 400:
             return "fail", f"not enough history ({len(dates)} days) — run data collection first"
         R = E.returns(C)

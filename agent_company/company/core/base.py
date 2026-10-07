@@ -65,8 +65,15 @@ def log(agent, msg):
 
 # ---------------------------------------------------------------- database
 SCHEMA = """
-CREATE TABLE IF NOT EXISTS prices(symbol TEXT, date TEXT, close REAL, high REAL, low REAL,
-  volume REAL, source TEXT, PRIMARY KEY(symbol, date));
+CREATE TABLE IF NOT EXISTS series_meta(sid INTEGER PRIMARY KEY, symbol TEXT UNIQUE, source TEXT,
+  freq TEXT DEFAULT 'D', note TEXT, updated TEXT);
+-- compact store: integer series id, integer date (YYYYMMDD), prices as integers x 10^4
+CREATE TABLE IF NOT EXISTS px(sid INTEGER, d INTEGER, c INTEGER, h INTEGER, l INTEGER, v INTEGER,
+  PRIMARY KEY(sid, d)) WITHOUT ROWID;
+CREATE VIEW IF NOT EXISTS prices AS SELECT m.symbol AS symbol,
+  printf('%04d-%02d-%02d', p.d / 10000, p.d / 100 % 100, p.d % 100) AS date,
+  p.c / 10000.0 AS close, p.h / 10000.0 AS high, p.l / 10000.0 AS low, p.v AS volume, m.source AS source
+  FROM px p JOIN series_meta m USING(sid);
 CREATE TABLE IF NOT EXISTS events(date TEXT, symbol TEXT, kind TEXT, text TEXT, source TEXT,
   url TEXT, created TEXT, PRIMARY KEY(date, symbol, kind, text));
 CREATE TABLE IF NOT EXISTS news(symbol TEXT, ts TEXT, title TEXT, url TEXT, source TEXT,
@@ -89,6 +96,10 @@ class DB:
     def __init__(self, path=None):
         os.makedirs(DATA, exist_ok=True)
         self.path = path or os.path.join(DATA, "market.db")
+        starter = os.path.join(DATA, "starter.db")
+        if path is None and not os.path.exists(self.path) and os.path.exists(starter):
+            import shutil
+            shutil.copy(starter, self.path)   # ship-with data: FX since 1971, VIX, oil, macro
         self._local = threading.local()
         self.x(SCHEMA, script=True)
 
@@ -116,12 +127,57 @@ class DB:
     def q(self, sql, args=()):
         return [dict(r) for r in self.con.execute(sql, args).fetchall()]
 
-    # convenience
+    # ---- compact price store
+    SCALE = 10000
+
+    def sid(self, symbol, source=None, freq="D", note=None, create=True):
+        r = self.con.execute("SELECT sid FROM series_meta WHERE symbol=?", (symbol,)).fetchone()
+        if r:
+            if source:
+                self.x("UPDATE series_meta SET source=?, updated=? WHERE sid=?", (source, now_iso(), r[0]))
+            return r[0]
+        if not create:
+            return None
+        return self.x("INSERT INTO series_meta(symbol,source,freq,note,updated) VALUES(?,?,?,?,?)",
+                      (symbol, source, freq, note, now_iso())).lastrowid
+
+    def put_prices(self, symbol, rows, source, freq="D", note=None):
+        """rows: (date 'YYYY-MM-DD', close, high, low, volume). Returns rows written."""
+        sid = self.sid(symbol, source, freq, note)
+        S = self.SCALE
+
+        def i(v):
+            return None if v is None else int(round(float(v) * S))
+        out = []
+        for d, c, h, l, v in rows:
+            if c is None:
+                continue
+            ci = i(c)
+            hi, lo = i(h), i(l)
+            out.append((sid, int(d[:10].replace("-", "")), ci, None if hi == ci else hi, None if lo == ci else lo,
+                        int(v) if v else None))
+        self.x("INSERT OR REPLACE INTO px VALUES(?,?,?,?,?,?)", out, many=True)
+        return len(out)
+
+    def last_date(self, symbol):
+        sid = self.sid(symbol, create=False)
+        if sid is None:
+            return None
+        r = self.con.execute("SELECT MAX(d) FROM px WHERE sid=?", (sid,)).fetchone()[0]
+        return f"{r // 10000:04d}-{r // 100 % 100:02d}-{r % 100:02d}" if r else None
+
     def series(self, symbol, start=None):
-        rows = self.q("SELECT date, close FROM prices WHERE symbol=? AND close IS NOT NULL"
-                      + (" AND date>=?" if start else "") + " ORDER BY date",
-                      (symbol, start) if start else (symbol,))
-        return [(r["date"], r["close"]) for r in rows]
+        sid = self.sid(symbol, create=False)
+        if sid is None:
+            return []
+        a = [sid]
+        sql = "SELECT d, c FROM px WHERE sid=?"
+        if start:
+            sql += " AND d>=?"
+            a.append(int(start.replace("-", "")))
+        S = float(self.SCALE)
+        return [(f"{d // 10000:04d}-{d // 100 % 100:02d}-{d % 100:02d}", c / S)
+                for d, c in self.con.execute(sql + " ORDER BY d", a).fetchall()]
 
     def memo(self, run_id, agent, topic, body, symbol=None, status=None, confidence=None):
         self.x("INSERT INTO memos(run_id,ts,agent,topic,symbol,status,confidence,body) VALUES(?,?,?,?,?,?,?,?)",
@@ -158,7 +214,7 @@ def http(url, source, method="GET", headers=None, body=None, timeout=20, raw=Fal
     host = urllib.parse.urlparse(url).hostname
     if host in BLOCKED:
         _stat(source, False, "host blocked earlier this run")
-        raise OSError(f"{host} blocked")
+        raise HostBlocked(f"{host} blocked")
     h = {"User-Agent": UA, "Accept": "*/*"}
     h.update(headers or {})
     data = None
@@ -173,8 +229,9 @@ def http(url, source, method="GET", headers=None, body=None, timeout=20, raw=Fal
         return payload if raw else payload.decode("utf-8", "replace")
     except Exception as e:
         _stat(source, False, e)
-        if "Tunnel connection failed" in str(e) or "getaddrinfo" in str(e):
+        if "Tunnel connection failed" in str(e) or "getaddrinfo" in str(e) or "timed out" in str(e):
             BLOCKED.add(host)
+            raise HostBlocked(f"{host} unreachable: {e}") from e
         raise
 
 
@@ -186,11 +243,19 @@ def new_run_id(prefix):
     return f"{prefix}-{datetime.now().strftime('%Y%m%d-%H%M%S')}-{uuid.uuid4().hex[:4]}"
 
 
+class HostBlocked(OSError):
+    pass
+
+
 def retry(fn, tries=3, wait=2.0):
+    """Retry transient errors (429/5xx/timeouts). A blocked host is not retried."""
     for i in range(tries):
         try:
             return fn()
-        except Exception:
-            if i == tries - 1:
+        except HostBlocked:
+            raise
+        except Exception as e:
+            code = getattr(e, "code", None)
+            if i == tries - 1 or code in (400, 401, 403, 404):
                 raise
             time.sleep(wait * (2 ** i))

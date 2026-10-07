@@ -60,7 +60,7 @@ def cmd_replay(days=60, demo=True, quiet=False):
     for t in ("trades", "paper_equity", "paper_positions", "paper_cash"):
         db.x(f"DELETE FROM {t}")
     ctx = Context(run_id=new_run_id("replay"), mode="day", demo=demo, db=db, ai=AI(demo=True))
-    cal = [r["date"] for r in db.q("SELECT date FROM prices WHERE symbol='SPY' ORDER BY date")][-days:]
+    cal = [d for d, _ in db.series("SPY")][-days:]
     cro.execute(ctx)
     for d in cal:
         ctx.shared["as_of"] = d
@@ -73,12 +73,25 @@ def cmd_replay(days=60, demo=True, quiet=False):
     open_file(ctx.shared.get("dashboard_path"), quiet)
 
 
+def cmd_pack():
+    """Shrink the database (VACUUM) and show how much space each kind of data uses."""
+    db = DB()
+    before = os.path.getsize(db.path)
+    db.con.execute("VACUUM")
+    db.con.execute("ANALYZE")
+    after = os.path.getsize(db.path)
+    n = db.q("SELECT COUNT(*) n FROM px")[0]["n"]
+    print(f"{db.path}: {before // 1024} KB -> {after // 1024} KB, {n:,} price rows, {after / max(n, 1):.1f} bytes/row")
+
+
 def cmd_status():
     db = DB()
-    rows = db.q("SELECT symbol, COUNT(*) n, MIN(date) a, MAX(date) b, MAX(source) src FROM prices GROUP BY symbol ORDER BY symbol")
+    rows = db.q("SELECT m.symbol, COUNT(*) n, MIN(p.d) a, MAX(p.d) b, m.source src FROM px p JOIN series_meta m USING(sid) "
+                "GROUP BY m.symbol ORDER BY m.symbol")
     print(f"{len(rows)} series in {db.path}")
     for r in rows:
-        print(f"  {r['symbol']:<12} {r['n']:>5} days  {r['a']} → {r['b']}  ({r['src']})")
+        f = lambda d: f"{d // 10000}-{d // 100 % 100:02d}-{d % 100:02d}"
+        print(f"  {r['symbol']:<15} {r['n']:>6} rows  {f(r['a'])} → {f(r['b'])}  ({r['src']})")
     print("strategies:", db.q("SELECT name, verdict FROM strategies WHERE run_id=(SELECT run_id FROM strategies ORDER BY ts DESC LIMIT 1)"))
     print("paper equity:", db.q("SELECT strategy, date, value FROM paper_equity ORDER BY date DESC LIMIT 6"))
 
@@ -140,6 +153,8 @@ def main(argv):
         sys.exit(0 if res.wasSuccessful() else 1)
     elif cmd == "status":
         cmd_status()
+    elif cmd == "pack":
+        cmd_pack()
     elif cmd == "replay":
         cmd_replay(int(args[1]) if len(args) > 1 else 60, demo="--real" not in argv, quiet=quiet)
     elif cmd == "probe":

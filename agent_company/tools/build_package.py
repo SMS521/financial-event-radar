@@ -38,6 +38,9 @@ def build(platform="win_amd64", out="AgentCompany.zip"):
                     z.write(p, os.path.join("AgentCompany", os.path.relpath(p, ROOT)))
             for d in ("data", "reports"):
                 z.writestr(f"AgentCompany/{d}/.keep", "")
+            starter = os.path.join(ROOT, "data", "market.db")
+            if os.path.exists(starter):       # ship collected data as starter.db (copied on first run)
+                z.write(starter, "AgentCompany/data/starter.db")
             for dd, _, files in os.walk(v):
                 for f in files:
                     p = os.path.join(dd, f)

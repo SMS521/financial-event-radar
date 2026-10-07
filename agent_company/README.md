@@ -45,6 +45,17 @@ Real money is never touched: the code has **no real-money trading path**.
 Extras: `EDIT KEYS.bat` · `OPEN DASHBOARD.bat` · `STATUS - what is in the database.bat` ·
 `STOP TRADING (kill switch).bat` · `9 SCHEDULE OFF.bat`
 
+## Data you get
+
+| Already inside the zip (`data\starter.db`, loaded on first run) | Collected by step 4 on your PC |
+|---|---|
+| 28 currency pairs daily since **1971** (USD/INR, USD/JPY, EUR/USD, GBP/USD, KRW, TWD, SGD, CNY…) | ~100 core symbols × up to 30 years daily (Yahoo → Stooq → eToro fallback) |
+| VIX daily since 1990 · Brent/WTI since 1986 · US gas since 1997 | all ~500 **S&P 500** stocks × 12 years (closing prices only, to save space) |
+| S&P 500 monthly since 1871 · gold since 1833 · US 10y yield · US CPI | refreshed nightly (only the newest days are downloaded) |
+
+Storage is compact: one SQLite file, integer dates/prices, ~18 bytes per price row
+(≈4.5× smaller than a plain table). Expect 30–50 MB in total. `python -m company.cli pack` shrinks it; it also runs monthly.
+
 ## Keys (all optional — `EDIT KEYS.bat`)
 
 | Key | Turns on | Without it |

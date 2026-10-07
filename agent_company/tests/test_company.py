@@ -78,6 +78,20 @@ class Engine(unittest.TestCase):
         self.assertEqual(split, 600)
 
 
+class Storage(unittest.TestCase):
+    def test_compact_roundtrip(self):
+        with tempfile.TemporaryDirectory() as d:
+            db = DB(os.path.join(d, "s.db"))
+            db.put_prices("USDJPY=X", [("2026-10-05", 147.1234, 148.0, 146.5, None), ("2026-10-06", 147.5, None, None, None)], "test")
+            db.put_prices("USDJPY=X", [("2026-10-06", 147.6, None, None, None)], "test2")   # overwrite same day
+            self.assertEqual(db.series("USDJPY=X"), [("2026-10-05", 147.1234), ("2026-10-06", 147.6)])
+            self.assertEqual(db.series("USDJPY=X", "2026-10-06"), [("2026-10-06", 147.6)])
+            self.assertEqual(db.last_date("USDJPY=X"), "2026-10-06")
+            row = db.q("SELECT * FROM prices WHERE symbol='USDJPY=X' ORDER BY date")[0]
+            self.assertEqual((row["date"], row["close"], row["high"], row["source"]), ("2026-10-05", 147.1234, 148.0, "test2"))
+            self.assertEqual(db.series("NOPE"), [])
+
+
 class Ledger(unittest.TestCase):
     def test_buy_sell_cash(self):
         from company.brokers.paper import LocalLedger
@@ -121,6 +135,17 @@ class Parsers(unittest.TestCase):
         usdinr = dict(P.ecb_cross(fx, "USD", "INR"))
         self.assertAlmostEqual(usdinr["2026-10-06"], 92.0 / 1.10)
         self.assertEqual(dict(P.ecb_cross(fx, "EUR", "USD"))["2026-10-05"], 1.0)
+
+    def test_open_fx_direction(self):
+        csv_txt = ("Date,Country,Exchange rate\n2026-10-02,Euro,0.8\n2026-10-02,India,96.0\n"
+                   "2026-10-02,United Kingdom,0.75\n2026-10-02,Japan,150\n")
+        with mock.patch.object(P, "http", side_effect=lambda url, *a, **k: csv_txt if "exchange-rates" in url else (_ for _ in ()).throw(OSError("x"))):
+            o = P.open_datasets()
+        self.assertAlmostEqual(o["EURUSD=X"][0][0][1], 1.25)        # 1 EUR = 1.25 USD
+        self.assertAlmostEqual(o["GBPUSD=X"][0][0][1], 1 / 0.75)
+        self.assertAlmostEqual(o["USDINR=X"][0][0][1], 96.0)
+        self.assertAlmostEqual(o["EURINR=X"][0][0][1], 120.0)       # 96 / 0.8
+        self.assertAlmostEqual(o["EURGBP=X"][0][0][1], 0.9375)      # 0.75 / 0.8
 
     def test_stooq_parse(self):
         with mock.patch.object(P, "http", return_value="Date,Open,High,Low,Close,Volume\n2026-10-05,1,2,0.5,1.5,100\n"):
@@ -256,7 +281,7 @@ class Safety(unittest.TestCase):
         from company.agents.risk_exec import PaperTrader
         with tempfile.TemporaryDirectory() as d:
             db = DB(os.path.join(d, "s.db"))
-            db.x("INSERT INTO prices VALUES('SPY','2020-01-02',1,1,1,1,'t')")
+            db.put_prices("SPY", [("2020-01-02", 1, 1, 1, 1)], "t")
             ctx = Context(run_id="s", mode="day", demo=True, db=db, ai=None)
             ctx.shared["risk"] = {"allowed_strategies": ["trend_sma"], "size_factor": 1}
             with mock.patch("company.quant.engine.build_matrix", return_value=(["2020-01-02"], ["SPY"], [[1.0]])):

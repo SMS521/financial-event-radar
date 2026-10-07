@@ -1,5 +1,5 @@
 {
- "_note": "Universe for data collection & backtests. group: portfolio | traded_before | universe. Add/remove freely; 'symbol' is the Yahoo ticker, 'etoro' the eToro symbol guess (verify with 9_ETORO_PROBE).",
+ "_note": "Universe for data collection & backtests. group: portfolio | traded_before | universe. Add/remove freely; 'symbol' is the Yahoo ticker, 'etoro' the eToro symbol guess (verify with 9_ETORO_PROBE). Symbols with source=open come from GitHub open datasets (FRED/EIA/CBOE/Shiller), not Yahoo.",
  "symbols": [
   {
    "symbol": "ENR.DE",
@@ -878,6 +878,108 @@
    "name": "USD/TWD",
    "base": "USD",
    "quote": "TWD"
+  },
+  {
+   "symbol": "AUDUSD=X",
+   "name": "AUD/USD",
+   "base": "AUD",
+   "quote": "USD"
+  },
+  {
+   "symbol": "NZDUSD=X",
+   "name": "NZD/USD",
+   "base": "NZD",
+   "quote": "USD"
+  },
+  {
+   "symbol": "USDCAD=X",
+   "name": "USD/CAD",
+   "base": "USD",
+   "quote": "CAD"
+  },
+  {
+   "symbol": "USDCHF=X",
+   "name": "USD/CHF",
+   "base": "USD",
+   "quote": "CHF"
+  },
+  {
+   "symbol": "USDHKD=X",
+   "name": "USD/HKD",
+   "base": "USD",
+   "quote": "HKD"
+  },
+  {
+   "symbol": "USDBRL=X",
+   "name": "USD/BRL",
+   "base": "USD",
+   "quote": "BRL"
+  },
+  {
+   "symbol": "USDMXN=X",
+   "name": "USD/MXN",
+   "base": "USD",
+   "quote": "MXN"
+  },
+  {
+   "symbol": "USDZAR=X",
+   "name": "USD/ZAR",
+   "base": "USD",
+   "quote": "ZAR"
+  },
+  {
+   "symbol": "USDTHB=X",
+   "name": "USD/THB",
+   "base": "USD",
+   "quote": "THB"
+  },
+  {
+   "symbol": "USDMYR=X",
+   "name": "USD/MYR",
+   "base": "USD",
+   "quote": "MYR"
+  },
+  {
+   "symbol": "USDSEK=X",
+   "name": "USD/SEK",
+   "base": "USD",
+   "quote": "SEK"
+  },
+  {
+   "symbol": "USDNOK=X",
+   "name": "USD/NOK",
+   "base": "USD",
+   "quote": "NOK"
+  },
+  {
+   "symbol": "USDDKK=X",
+   "name": "USD/DKK",
+   "base": "USD",
+   "quote": "DKK"
+  },
+  {
+   "symbol": "EURJPY=X",
+   "name": "EUR/JPY",
+   "base": "EUR",
+   "quote": "JPY"
+  },
+  {
+   "symbol": "EURGBP=X",
+   "name": "EUR/GBP",
+   "base": "EUR",
+   "quote": "GBP"
+  },
+  {
+   "symbol": "EURCHF=X",
+   "name": "EUR/CHF",
+   "base": "EUR",
+   "quote": "CHF"
+  },
+  {
+   "symbol": "EURCNY=X",
+   "name": "EUR/CNY",
+   "base": "EUR",
+   "quote": "CNY"
   }
  ],
  "macro": [
@@ -916,6 +1018,46 @@
   {
    "symbol": "DX-Y.NYB",
    "name": "US dollar index"
+  },
+  {
+   "symbol": "BRENT_SPOT",
+   "name": "Brent spot (EIA)",
+   "source": "open"
+  },
+  {
+   "symbol": "WTI_SPOT",
+   "name": "WTI spot (EIA)",
+   "source": "open"
+  },
+  {
+   "symbol": "NATGAS_SPOT",
+   "name": "Henry Hub gas spot",
+   "source": "open"
+  },
+  {
+   "symbol": "SPX_MONTHLY",
+   "name": "S&P 500 monthly since 1871",
+   "source": "open"
+  },
+  {
+   "symbol": "GOLD_MONTHLY",
+   "name": "Gold monthly since 1833",
+   "source": "open"
+  },
+  {
+   "symbol": "US10Y_MONTHLY",
+   "name": "US 10y yield monthly",
+   "source": "open"
+  },
+  {
+   "symbol": "US_CPI_MONTHLY",
+   "name": "US CPI monthly since 1913",
+   "source": "open"
   }
- ]
+ ],
+ "extended": {
+  "_note": "Extra lists collected for research/backtests. sp500 = all ~500 S&P 500 stocks (list from GitHub open datasets). Uses ~10-25 MB.",
+  "sp500": true,
+  "years": 12
+ }
 }

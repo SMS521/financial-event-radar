@@ -43,7 +43,11 @@ def _parallel(ctx, agents):
 def collect(ctx):
     _parallel(ctx, [price, fx])
     events.execute(ctx)
-    return auditor.execute(ctx)[0] != "fail"
+    ok = auditor.execute(ctx)[0] != "fail"
+    from datetime import date
+    if date.today().day == 1 and not ctx.demo:      # monthly housekeeping: reclaim space
+        ctx.db.con.execute("VACUUM")
+    return ok
 
 
 def research(ctx):

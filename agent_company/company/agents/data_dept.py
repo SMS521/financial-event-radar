@@ -8,8 +8,7 @@ from company.data import providers as P
 
 
 def _store(db, symbol, rows, source):
-    db.x("INSERT OR REPLACE INTO prices(symbol,date,close,high,low,volume,source) VALUES(?,?,?,?,?,?,?)",
-         [(symbol, d, c, h, l, v, source) for d, c, h, l, v in rows], many=True)
+    db.put_prices(symbol, rows, source)
 
 
 def _stooq_name(sym):
@@ -26,7 +25,20 @@ class PriceEngineer(Agent):
     job = "Collects 5+ years of daily prices for portfolio, past trades and the research universe."
 
     def run(self, ctx):
-        syms = [s for s in ctx.universe["symbols"]] + [{"symbol": m["symbol"], "kind": "index"} for m in ctx.universe["macro"]]
+        syms = [s for s in ctx.universe["symbols"]] + [{"symbol": m["symbol"], "kind": "index"} for m in ctx.universe["macro"]
+                                                         if m.get("source") != "open"]
+        have = {s["symbol"] for s in syms}
+        ext = ctx.universe.get("extended", {})
+        if ext.get("sp500") and not ctx.demo:
+            try:
+                cons = P.sp500_constituents()
+                ctx.db.x("CREATE TABLE IF NOT EXISTS catalog(list TEXT, symbol TEXT, name TEXT, sector TEXT, PRIMARY KEY(list, symbol))")
+                ctx.db.x("INSERT OR REPLACE INTO catalog VALUES('sp500',?,?,?)", [(c["symbol"], c["name"], c["sector"]) for c in cons], many=True)
+            except Exception:
+                cons = [{"symbol": r["symbol"]} for r in ctx.db.q("SELECT symbol FROM catalog WHERE list='sp500'")] \
+                    if ctx.db.q("SELECT name FROM sqlite_master WHERE name='catalog'") else []
+            syms += [{"symbol": c["symbol"], "kind": "stock", "years": ext.get("years", 12), "close_only": True}
+                     for c in cons if c["symbol"] not in have]
         years = ctx.settings.get("history_years", 6)
         keys = secrets()
         et = P.EToro(keys, cfg("etoro.json", {}))
@@ -34,11 +46,11 @@ class PriceEngineer(Agent):
 
         def one(s):
             sym = s["symbol"]
-            last = ctx.db.q("SELECT MAX(date) d FROM prices WHERE symbol=?", (sym,))[0]["d"]
+            last = ctx.db.last_date(sym)
             if ctx.demo:
                 return sym, ctx.synth.daily(sym, s.get("kind", "stock")), "demo"
             # incremental: if we have data, only refresh recent months
-            yrs = 0.3 if last and last >= (date.today() - timedelta(days=60)).isoformat() else years
+            yrs = 0.3 if last and last >= (date.today() - timedelta(days=60)).isoformat() else s.get("years", years)
             for name, fn in (("yahoo", lambda: retry(lambda: P.yahoo_daily(sym, yrs), tries=3, wait=1.5)),
                              ("stooq", lambda: P.stooq_daily(_stooq_name(sym)) if _stooq_name(sym) else []),
                              ("etoro", lambda: et.candles(et.instrument_id(s.get("etoro") or sym)) if et.ready else [])):
@@ -50,8 +62,11 @@ class PriceEngineer(Agent):
                     continue
             return sym, [], None
 
+        close_only = {s["symbol"] for s in syms if s.get("close_only")}
         with ThreadPoolExecutor(4) as ex:      # gentle: free sources throttle bursts
             for sym, rows, src in ex.map(one, syms):
+                if rows and sym in close_only:     # extended lists: close only = ~40% less space
+                    rows = [(d, c, None, None, None) for d, c, *_ in rows]
                 if rows:
                     _store(ctx.db, sym, rows, src)
                     ok += 1
@@ -67,7 +82,7 @@ class PriceEngineer(Agent):
 
 class FXEngineer(Agent):
     id, name, title, dept = 4, "fx_engineer", "FX & Macro Engineer", "Data"
-    job = "Collects currency pairs (USD/INR, USD/JPY, EUR/USD, GBP/USD...) — ECB history since 1999 + Yahoo."
+    job = "Currencies since 1971 (FRED via GitHub open data) + VIX, oil, gas, monthly macro since 1800s; Yahoo/ECB keep it fresh."
 
     def run(self, ctx):
         pairs = ctx.universe["fx"]
@@ -76,6 +91,15 @@ class FXEngineer(Agent):
                 _store(ctx.db, p["symbol"], ctx.synth.daily(p["symbol"], "fx"), "demo")
             return "ok", f"{len(pairs)} FX pairs (demo data)"
         done, how = 0, {}
+        # 1) bulk history from GitHub open datasets (FX since 1971, VIX, oil, gas, monthly macro)
+        try:
+            od = P.open_datasets()
+            for sym, (rows, freq, note) in od.items():
+                ctx.db.put_prices(sym, rows, "open-datasets", freq, note)
+            how["open_datasets_series"] = len(od)
+        except Exception as e:
+            how["open_datasets_error"] = str(e)[:80]
+        # 2) Yahoo / ECB on top (fresher, overwrites overlapping days)
         ecb = None
         try:
             ecb = P.ecb_fx_history()
@@ -95,9 +119,10 @@ class FXEngineer(Agent):
                 _store(ctx.db, p["symbol"], rows, src)
                 done += 1
                 how[src] = how.get(src, 0) + 1
+        done = sum(1 for p in pairs if ctx.db.last_date(p["symbol"]))   # filled by any source
         if done == 0:
             return "fail", "no FX source reachable"
-        return ("ok" if done == len(pairs) else "warn"), f"{done}/{len(pairs)} FX pairs via {how}"
+        return ("ok" if done == len(pairs) else "warn"), f"{done}/{len(pairs)} FX pairs filled; sources {how}"
 
 
 class EventClerk(Agent):
@@ -134,7 +159,7 @@ class DataAuditor(Agent):
         today = date.today()
         for s in ctx.universe["symbols"] + ctx.universe["fx"]:
             sym = s["symbol"]
-            ser = ctx.db.series(sym)
+            ser = ctx.db.series(sym, (date.today() - timedelta(days=800)).isoformat())
             if not ser:
                 continue
             checked += 1
