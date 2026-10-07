@@ -1,0 +1,921 @@
+{
+ "_note": "Universe for data collection & backtests. group: portfolio | traded_before | universe. Add/remove freely; 'symbol' is the Yahoo ticker, 'etoro' the eToro symbol guess (verify with 9_ETORO_PROBE).",
+ "symbols": [
+  {
+   "symbol": "ENR.DE",
+   "name": "Siemens Energy",
+   "segment": "Energy",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ENR",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "005930.KS",
+   "name": "Samsung Electronics",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "005930",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "^GSPC",
+   "name": "S&P 500",
+   "segment": "US Index",
+   "kind": "index",
+   "stooq": null,
+   "etoro": "^GSPC",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "^NDX",
+   "name": "Nasdaq-100",
+   "segment": "US Tech Index",
+   "kind": "index",
+   "stooq": null,
+   "etoro": "^NDX",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "EWT",
+   "name": "iShares MSCI Taiwan (US twin)",
+   "segment": "Taiwan",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "EWT",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "EWS",
+   "name": "iShares MSCI Singapore (US twin)",
+   "segment": "Singapore",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "EWS",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "HOT.DE",
+   "name": "Hochtief",
+   "segment": "Construction / Data centers",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "HOT",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "TSM",
+   "name": "TSMC ADR",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "TSM",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "AMAT",
+   "name": "Applied Materials",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "AMAT",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "XAIX.DE",
+   "name": "Xtrackers AI & Big Data",
+   "segment": "AI",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "XAIX",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "MTUM",
+   "name": "iShares Momentum (US twin)",
+   "segment": "Global Momentum",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "MTUM",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "UFO",
+   "name": "Procure Space ETF",
+   "segment": "Space",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "UFO",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "GC=F",
+   "name": "Gold futures",
+   "segment": "Gold",
+   "kind": "commodity",
+   "stooq": null,
+   "etoro": "GC=F",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "HAG.DE",
+   "name": "Hensoldt",
+   "segment": "Defence",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "HAG",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "CTSH",
+   "name": "Cognizant",
+   "segment": "IT Services",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "CTSH",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "PKO.WA",
+   "name": "PKO Bank Polski",
+   "segment": "Banks Poland",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "PKO",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "NG=F",
+   "name": "Natural gas futures",
+   "segment": "Energy",
+   "kind": "commodity",
+   "stooq": null,
+   "etoro": "NG=F",
+   "group": "portfolio"
+  },
+  {
+   "symbol": "NVDA",
+   "name": "NVIDIA",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "NVDA",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "SI=F",
+   "name": "Silver",
+   "segment": "Precious metals",
+   "kind": "commodity",
+   "stooq": null,
+   "etoro": "SI=F",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "TSLA",
+   "name": "Tesla",
+   "segment": "EV",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "TSLA",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "AAPL",
+   "name": "Apple",
+   "segment": "Big Tech",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "AAPL",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "MSFT",
+   "name": "Microsoft",
+   "segment": "Big Tech",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "MSFT",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "META",
+   "name": "Meta",
+   "segment": "Big Tech",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "META",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "AMZN",
+   "name": "Amazon",
+   "segment": "Big Tech",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "AMZN",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "ORCL",
+   "name": "Oracle",
+   "segment": "Cloud / AI",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ORCL",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "DELL",
+   "name": "Dell",
+   "segment": "AI hardware",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "DELL",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "PANW",
+   "name": "Palo Alto Networks",
+   "segment": "Cybersecurity",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "PANW",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "NET",
+   "name": "Cloudflare",
+   "segment": "Cloud",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "NET",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "LMT",
+   "name": "Lockheed Martin",
+   "segment": "Defence",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "LMT",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "9984.T",
+   "name": "SoftBank",
+   "segment": "AI / Japan",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "9984",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "TKA.DE",
+   "name": "ThyssenKrupp",
+   "segment": "Industrials",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "TKA",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "MTX.DE",
+   "name": "MTU Aero Engines",
+   "segment": "Aerospace",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "MTX",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "IBN",
+   "name": "ICICI Bank",
+   "segment": "India banks",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "IBN",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "QBTS",
+   "name": "D-Wave Quantum",
+   "segment": "Quantum",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "QBTS",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "BTC-USD",
+   "name": "Bitcoin",
+   "segment": "Crypto",
+   "kind": "crypto",
+   "stooq": null,
+   "etoro": "BTC-USD",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "HG=F",
+   "name": "Copper",
+   "segment": "Metals",
+   "kind": "commodity",
+   "stooq": null,
+   "etoro": "HG=F",
+   "group": "traded_before"
+  },
+  {
+   "symbol": "GOOGL",
+   "name": "Alphabet",
+   "segment": "Big Tech",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "GOOGL",
+   "group": "universe"
+  },
+  {
+   "symbol": "AVGO",
+   "name": "Broadcom",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "AVGO",
+   "group": "universe"
+  },
+  {
+   "symbol": "AMD",
+   "name": "AMD",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "AMD",
+   "group": "universe"
+  },
+  {
+   "symbol": "ASML",
+   "name": "ASML",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ASML",
+   "group": "universe"
+  },
+  {
+   "symbol": "MU",
+   "name": "Micron",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "MU",
+   "group": "universe"
+  },
+  {
+   "symbol": "LRCX",
+   "name": "Lam Research",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "LRCX",
+   "group": "universe"
+  },
+  {
+   "symbol": "KLAC",
+   "name": "KLA",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "KLAC",
+   "group": "universe"
+  },
+  {
+   "symbol": "ARM",
+   "name": "Arm Holdings",
+   "segment": "Semiconductors",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ARM",
+   "group": "universe"
+  },
+  {
+   "symbol": "SMCI",
+   "name": "Super Micro",
+   "segment": "AI hardware",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "SMCI",
+   "group": "universe"
+  },
+  {
+   "symbol": "PLTR",
+   "name": "Palantir",
+   "segment": "AI software",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "PLTR",
+   "group": "universe"
+  },
+  {
+   "symbol": "CRM",
+   "name": "Salesforce",
+   "segment": "Software",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "CRM",
+   "group": "universe"
+  },
+  {
+   "symbol": "ADBE",
+   "name": "Adobe",
+   "segment": "Software",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ADBE",
+   "group": "universe"
+  },
+  {
+   "symbol": "NOW",
+   "name": "ServiceNow",
+   "segment": "Software",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "NOW",
+   "group": "universe"
+  },
+  {
+   "symbol": "SAP",
+   "name": "SAP ADR",
+   "segment": "Software",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "SAP",
+   "group": "universe"
+  },
+  {
+   "symbol": "ACN",
+   "name": "Accenture",
+   "segment": "IT Services",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ACN",
+   "group": "universe"
+  },
+  {
+   "symbol": "INFY",
+   "name": "Infosys ADR",
+   "segment": "IT Services",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "INFY",
+   "group": "universe"
+  },
+  {
+   "symbol": "WIT",
+   "name": "Wipro ADR",
+   "segment": "IT Services",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "WIT",
+   "group": "universe"
+  },
+  {
+   "symbol": "JPM",
+   "name": "JPMorgan",
+   "segment": "Banks",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "JPM",
+   "group": "universe"
+  },
+  {
+   "symbol": "GS",
+   "name": "Goldman Sachs",
+   "segment": "Banks",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "GS",
+   "group": "universe"
+  },
+  {
+   "symbol": "HDB",
+   "name": "HDFC Bank ADR",
+   "segment": "India banks",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "HDB",
+   "group": "universe"
+  },
+  {
+   "symbol": "RHM.DE",
+   "name": "Rheinmetall",
+   "segment": "Defence",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "RHM",
+   "group": "universe"
+  },
+  {
+   "symbol": "AIR.PA",
+   "name": "Airbus",
+   "segment": "Aerospace",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "AIR",
+   "group": "universe"
+  },
+  {
+   "symbol": "RTX",
+   "name": "RTX",
+   "segment": "Defence",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "RTX",
+   "group": "universe"
+  },
+  {
+   "symbol": "NOC",
+   "name": "Northrop Grumman",
+   "segment": "Defence",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "NOC",
+   "group": "universe"
+  },
+  {
+   "symbol": "SIE.DE",
+   "name": "Siemens",
+   "segment": "Industrials",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "SIE",
+   "group": "universe"
+  },
+  {
+   "symbol": "GEV",
+   "name": "GE Vernova",
+   "segment": "Energy",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "GEV",
+   "group": "universe"
+  },
+  {
+   "symbol": "VST",
+   "name": "Vistra",
+   "segment": "Energy",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "VST",
+   "group": "universe"
+  },
+  {
+   "symbol": "CEG",
+   "name": "Constellation Energy",
+   "segment": "Energy",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "CEG",
+   "group": "universe"
+  },
+  {
+   "symbol": "NEE",
+   "name": "NextEra",
+   "segment": "Energy",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "NEE",
+   "group": "universe"
+  },
+  {
+   "symbol": "XOM",
+   "name": "Exxon",
+   "segment": "Oil",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "XOM",
+   "group": "universe"
+  },
+  {
+   "symbol": "SHEL",
+   "name": "Shell",
+   "segment": "Oil",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "SHEL",
+   "group": "universe"
+  },
+  {
+   "symbol": "FCX",
+   "name": "Freeport-McMoRan",
+   "segment": "Metals",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "FCX",
+   "group": "universe"
+  },
+  {
+   "symbol": "RKLB",
+   "name": "Rocket Lab",
+   "segment": "Space",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "RKLB",
+   "group": "universe"
+  },
+  {
+   "symbol": "ASTS",
+   "name": "AST SpaceMobile",
+   "segment": "Space",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ASTS",
+   "group": "universe"
+  },
+  {
+   "symbol": "COIN",
+   "name": "Coinbase",
+   "segment": "Crypto",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "COIN",
+   "group": "universe"
+  },
+  {
+   "symbol": "MSTR",
+   "name": "MicroStrategy",
+   "segment": "Crypto",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "MSTR",
+   "group": "universe"
+  },
+  {
+   "symbol": "BABA",
+   "name": "Alibaba",
+   "segment": "China tech",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "BABA",
+   "group": "universe"
+  },
+  {
+   "symbol": "PDD",
+   "name": "PDD",
+   "segment": "China tech",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "PDD",
+   "group": "universe"
+  },
+  {
+   "symbol": "SONY",
+   "name": "Sony ADR",
+   "segment": "Japan",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "SONY",
+   "group": "universe"
+  },
+  {
+   "symbol": "TM",
+   "name": "Toyota ADR",
+   "segment": "Japan",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "TM",
+   "group": "universe"
+  },
+  {
+   "symbol": "ALV.DE",
+   "name": "Allianz",
+   "segment": "Insurance",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "ALV",
+   "group": "universe"
+  },
+  {
+   "symbol": "NVO",
+   "name": "Novo Nordisk",
+   "segment": "Healthcare",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "NVO",
+   "group": "universe"
+  },
+  {
+   "symbol": "LLY",
+   "name": "Eli Lilly",
+   "segment": "Healthcare",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "LLY",
+   "group": "universe"
+  },
+  {
+   "symbol": "COST",
+   "name": "Costco",
+   "segment": "Consumer",
+   "kind": "stock",
+   "stooq": null,
+   "etoro": "COST",
+   "group": "universe"
+  },
+  {
+   "symbol": "SPY",
+   "name": "SPDR S&P 500",
+   "segment": "Benchmark",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "SPY",
+   "group": "universe"
+  },
+  {
+   "symbol": "QQQ",
+   "name": "Invesco QQQ",
+   "segment": "Benchmark",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "QQQ",
+   "group": "universe"
+  },
+  {
+   "symbol": "GLD",
+   "name": "SPDR Gold",
+   "segment": "Benchmark",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "GLD",
+   "group": "universe"
+  },
+  {
+   "symbol": "SLV",
+   "name": "iShares Silver",
+   "segment": "Benchmark",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "SLV",
+   "group": "universe"
+  },
+  {
+   "symbol": "TLT",
+   "name": "20y Treasuries",
+   "segment": "Benchmark",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "TLT",
+   "group": "universe"
+  },
+  {
+   "symbol": "EWJ",
+   "name": "iShares Japan",
+   "segment": "Asia",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "EWJ",
+   "group": "universe"
+  },
+  {
+   "symbol": "EWY",
+   "name": "iShares Korea",
+   "segment": "Asia",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "EWY",
+   "group": "universe"
+  },
+  {
+   "symbol": "INDA",
+   "name": "iShares India",
+   "segment": "Asia",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "INDA",
+   "group": "universe"
+  },
+  {
+   "symbol": "EIDO",
+   "name": "iShares Indonesia",
+   "segment": "Asia",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "EIDO",
+   "group": "universe"
+  },
+  {
+   "symbol": "FXI",
+   "name": "iShares China",
+   "segment": "Asia",
+   "kind": "etf",
+   "stooq": null,
+   "etoro": "FXI",
+   "group": "universe"
+  }
+ ],
+ "fx": [
+  {
+   "symbol": "EURUSD=X",
+   "name": "EUR/USD",
+   "base": "EUR",
+   "quote": "USD"
+  },
+  {
+   "symbol": "USDJPY=X",
+   "name": "USD/JPY",
+   "base": "USD",
+   "quote": "JPY"
+  },
+  {
+   "symbol": "USDINR=X",
+   "name": "USD/INR",
+   "base": "USD",
+   "quote": "INR"
+  },
+  {
+   "symbol": "GBPUSD=X",
+   "name": "GBP/USD",
+   "base": "GBP",
+   "quote": "USD"
+  },
+  {
+   "symbol": "USDCNY=X",
+   "name": "USD/CNY",
+   "base": "USD",
+   "quote": "CNY"
+  },
+  {
+   "symbol": "USDKRW=X",
+   "name": "USD/KRW",
+   "base": "USD",
+   "quote": "KRW"
+  },
+  {
+   "symbol": "USDSGD=X",
+   "name": "USD/SGD",
+   "base": "USD",
+   "quote": "SGD"
+  },
+  {
+   "symbol": "EURINR=X",
+   "name": "EUR/INR",
+   "base": "EUR",
+   "quote": "INR"
+  },
+  {
+   "symbol": "USDPLN=X",
+   "name": "USD/PLN",
+   "base": "USD",
+   "quote": "PLN"
+  },
+  {
+   "symbol": "USDIDR=X",
+   "name": "USD/IDR",
+   "base": "USD",
+   "quote": "IDR"
+  },
+  {
+   "symbol": "USDTWD=X",
+   "name": "USD/TWD",
+   "base": "USD",
+   "quote": "TWD"
+  }
+ ],
+ "macro": [
+  {
+   "symbol": "^VIX",
+   "name": "VIX fear index"
+  },
+  {
+   "symbol": "^TNX",
+   "name": "US 10y yield"
+  },
+  {
+   "symbol": "^GDAXI",
+   "name": "DAX"
+  },
+  {
+   "symbol": "^N225",
+   "name": "Nikkei 225"
+  },
+  {
+   "symbol": "^KS11",
+   "name": "KOSPI"
+  },
+  {
+   "symbol": "^TWII",
+   "name": "TAIEX"
+  },
+  {
+   "symbol": "^NSEI",
+   "name": "Nifty 50"
+  },
+  {
+   "symbol": "BZ=F",
+   "name": "Brent oil"
+  },
+  {
+   "symbol": "DX-Y.NYB",
+   "name": "US dollar index"
+  }
+ ]
+}

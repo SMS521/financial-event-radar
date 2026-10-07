@@ -1,0 +1,15 @@
+{
+  "_note": "Strategy ideas the Quant Lab tests. Each runs on every symbol in 'universe_groups'. Grids are kept small on purpose: more combinations = more chance of a lucky fake.",
+  "universe_groups": ["portfolio", "traded_before", "universe"],
+  "oos_days": 252,
+  "cost_bps": 15,
+  "strategies": {
+    "trend_sma":      {"grid": {"n": [50, 100, 200]}},
+    "dual_momentum":  {"grid": {"lookback": [63, 126, 252], "top": [5, 10]}},
+    "rsi2_reversion": {"grid": {"entry": [5, 10], "exit_sma": [5]}},
+    "breakout":       {"grid": {"entry": [55], "exit": [20]}},
+    "vol_target_trend": {"grid": {"n": [100, 200], "target_vol": [0.15]}}
+  },
+  "benchmark": "SPY",
+  "leverage_test": [1, 3, 5]
+}

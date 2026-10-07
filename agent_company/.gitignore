@@ -1,0 +1,7 @@
+python/
+secrets/keys.txt
+data/
+reports/
+logs/
+__pycache__/
+STOP_TRADING.txt

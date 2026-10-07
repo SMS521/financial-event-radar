@@ -1,0 +1,12 @@
+{
+  "_note": "eToro public API. Paths from eToro docs + community reports (Oct 2026). Run 9_ETORO_PROBE.bat to verify read-only. Trading always uses the DEMO paths; there is deliberately no real-money path in this file.",
+  "base_url": "https://public-api.etoro.com/api/v1",
+  "paths": {
+    "search": "/market-data/search",
+    "candles": "/market-data/instruments/{id}/history/candles/{direction}/{interval}/{count}",
+    "demo_portfolio": "/trading/info/demo/portfolio",
+    "demo_pnl": "/trading/info/demo/pnl",
+    "demo_open_by_amount": "/trading/execution/demo/market-open-orders/by-amount",
+    "demo_close": "/trading/execution/demo/market-close-orders/positions/{position_id}"
+  }
+}

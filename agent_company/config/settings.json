@@ -1,0 +1,12 @@
+{
+  "email_to": "sahilphoto5195@gmail.com",
+  "history_years": 6,
+  "news_days": 7,
+  "deep_threshold_eur": 1000,
+  "ai_model": "claude-opus-5-5",
+  "ai_effort": "medium",
+  "ai_max_calls_per_night": 40,
+  "schedule": {"night": "22:30", "day_trade": "15:45", "scorecard": "22:15"},
+  "risk_words": ["downgrade", "cut", "cuts", "lawsuit", "probe", "investigation", "warning", "warns", "recall", "miss", "misses", "plunge", "plunges", "slump", "tumble", "tumbles", "sanction", "tariff", "tariffs", "fraud", "layoff", "layoffs", "delay", "halt", "default", "selloff", "sell-off", "crash", "falls", "drops", "loss", "export controls", "weak demand"],
+  "good_words": ["upgrade", "upgrades", "beat", "beats", "record", "raises guidance", "contract", "wins", "surge", "surges", "soars", "jumps", "rally", "buyback", "orders", "approval", "partnership", "outperform", "all-time high"]
+}

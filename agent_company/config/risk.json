@@ -1,0 +1,28 @@
+{
+ "_note": "Rules the Chief Risk Officer enforces. It can veto any trade or strategy that breaks them.",
+ "portfolio": {
+  "max_position_pct": 12,
+  "max_segment_pct": 30,
+  "min_turbo_knockout_distance_pct": 10,
+  "max_leverage_warn": 5
+ },
+ "strategy_approval": {
+  "min_oos_sharpe": 0.3,
+  "max_oos_drawdown_pct": 30,
+  "min_trades": 15,
+  "must_beat_benchmark_oos": false,
+  "max_param_fragility": 0.6
+ },
+ "paper_trading": {
+  "enabled": true,
+  "use_etoro_demo": true,
+  "capital_eur": 10000,
+  "max_trade_eur": 1000,
+  "max_open_positions": 10,
+  "daily_loss_stop_pct": 3,
+  "max_data_age_days": 4,
+  "kill_switch_file": "STOP_TRADING.txt",
+  "include_watch": true,
+  "_include_watch_note": "true = also paper-trade strategies with ONE failed check (virtual money only, for learning). Set false to trade only fully approved ones."
+ }
+}
